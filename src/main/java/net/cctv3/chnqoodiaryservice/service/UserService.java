@@ -5,4 +5,5 @@ import net.cctv3.chnqoodiaryservice.entity.User;
 
 public interface UserService extends IService<User> {
     String sendSms(String mobile);
+    String checkSms(String mobile, String code);
 }

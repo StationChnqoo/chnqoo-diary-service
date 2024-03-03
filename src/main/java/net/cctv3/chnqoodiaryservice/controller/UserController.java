@@ -22,4 +22,10 @@ public class UserController {
     public String sendSms(@RequestParam String mobile, HttpServletRequest request) {
         return userService.sendSms(mobile);
     }
+
+    @CrossOrigin
+    @GetMapping(value = {"/checkSms.do"}, produces = "application/json;charset=UTF-8")
+    public String checkSms(@RequestParam String mobile, @RequestParam String code, HttpServletRequest request) {
+        return userService.checkSms(mobile, code);
+    }
 }

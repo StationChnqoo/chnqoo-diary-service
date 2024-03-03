@@ -3,6 +3,7 @@ package net.cctv3.chnqoodiaryservice.implement;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.cctv3.chnqoodiaryservice.constants.Status;
 import net.cctv3.chnqoodiaryservice.constants.StringUtils;
 import net.cctv3.chnqoodiaryservice.controller.JsonResponser;
 import net.cctv3.chnqoodiaryservice.entity.User;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -97,5 +99,30 @@ public class UserServiceImpl implements UserService {
         user.setUpdateTime(StringUtils.currentTime());
         insertOrUpdate(user);
         return new JsonResponser().ok();
+    }
+
+    @Override
+    public String checkSms(String mobile, String code) {
+        JsonResponser responser = new JsonResponser();
+        QueryWrapper qr = new QueryWrapper();
+        qr.eq("mobile", mobile);
+        qr.eq("sms_code", code);
+        User user = userMapper.selectOne(qr);
+        if(user == null) {
+            responser.setCode(Status.SMS_CHECKED.getCode());
+        }
+        else {
+            long dbTime = StringUtils.dateParse2Milliseconds(user.getSmsTime());
+            long currentTime = System.currentTimeMillis();
+            if(currentTime - dbTime > 120 * 1000) {
+                responser.setCode(Status.SMS_TIMEOUT.getCode());
+            }
+            else {
+                responser.setCode(Status.SUCCESS.getCode());
+                responser.setData(user);
+            }
+        }
+        // System.out.println(responser.ok());
+        return responser.ok();
     }
 }

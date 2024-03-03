@@ -39,7 +39,7 @@ public class WebFilters implements HandlerInterceptor {
         else {
             long server = System.currentTimeMillis();
             long client = Long.parseLong(t);
-            if(client - server > 10 * 1000) {
+            if(server - client > 10 * 1000) {
                 result = false;
             }
             else {
@@ -62,9 +62,9 @@ public class WebFilters implements HandlerInterceptor {
             logger.debug(request.getRequestURL() + t + ": " + s);
             result = checkTS(t, s);
             if(!result) {
-                response.setContentType("text/html;charset=UTF-8");
+                response.setContentType("application/json;charset=UTF-8");
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().println(new JsonResponser(Status.TS_CHECKED_MD5.getCode()));
+                response.getWriter().println(new JsonResponser(Status.TS_CHECKED_MD5.getCode()).ok());
             }
         }
         return result;
