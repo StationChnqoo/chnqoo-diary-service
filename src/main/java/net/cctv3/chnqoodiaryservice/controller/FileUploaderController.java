@@ -14,12 +14,12 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
-public class FileUploaderAction {
+public class FileUploaderController {
     @Autowired
     MyConfig myConfig;
 
     @CrossOrigin
-    @PostMapping("/fileUploader.action")
+    @PostMapping("/fileUploader.do")
     public HashMap<String, Object> fileUploaderAction(@RequestParam MultipartFile file, HttpServletRequest request) {
         String idQoo = request.getParameter("idQoo");
         String originalFilename = file.getOriginalFilename();
